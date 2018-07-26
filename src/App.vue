@@ -6,23 +6,112 @@
 </template>
 
 <script>
-  import StyleEditor from './components/StyleEditor'
-  import ResumeEditor from './components/ResumeEditor'
-  import './assets/reset.css'
+import StyleEditor from "./components/StyleEditor";
+import ResumeEditor from "./components/ResumeEditor";
+import "./assets/reset.css";
 
-  export default {
-    name: 'app',
-    components: {
-      StyleEditor,
-      ResumeEditor
+export default {
+  name: "app",
+  components: {
+    StyleEditor,
+    ResumeEditor
+  },
+  data() {
+    return {
+      interval: 0,
+      currentStyle: "",
+      enableHtml: false,
+      fullStyle: [fullStyle_0, fullStyle_1, fullStyle_2],
+      currentMarkdown: "",
+      fullMarkdown: resume
+    };
+  },
+  created() {
+    this.makeResume();
+  },
+  methods: {
+    makeResume: async function() {
+      await this.progressivelyShowStyle(0);
+      await this.progressivelyShowResume();
+      await this.progressivelyShowStyle(1);
+      await this.showHtml();
+      await this.progressivelyShowStyle(2);
     },
-    data() {
-      return {
-        interval: 40,
-        currentStyle: '',
-        enableHtml: false,
-        fullStyle: [
-          `/*
+    showHtml: function() {
+      return new Promise((resolve, reject) => {
+        this.enableHtml = true;
+        resolve();
+      });
+    },
+    progressivelyShowStyle(n) {
+      return new Promise((resolve, reject) => {
+        let interval = this.interval;
+        let showStyle = async function() {
+          let style = this.fullStyle[n];
+          if (!style) {
+            return;
+          }
+          // 计算前 n 个 style 的字符总数
+          let length = this.fullStyle
+            .filter((_, index) => index <= n)
+            .map(item => item.length)
+            .reduce((p, c) => p + c, 0);
+          let prefixLength = length - style.length;
+          if (this.currentStyle.length < length) {
+            let l = this.currentStyle.length - prefixLength;
+            let char = style.substring(l, l + 1) || " ";
+            this.currentStyle += char;
+            if (style.substring(l - 1, l) === "\n" && this.$refs.styleEditor) {
+              this.$nextTick(() => {
+                this.$refs.styleEditor.goBottom();
+              });
+            }
+            setTimeout(showStyle, interval);
+          } else {
+            resolve();
+          }
+        }.bind(this);
+        showStyle();
+      });
+    },
+    progressivelyShowResume() {
+      return new Promise((resolve, reject) => {
+        let length = this.fullMarkdown.length;
+        let interval = this.interval;
+        let showResume = () => {
+          if (this.currentMarkdown.length < length) {
+            this.currentMarkdown = this.fullMarkdown.substring(
+              0,
+              this.currentMarkdown.length + 1
+            );
+            let lastChar = this.currentMarkdown[
+              this.currentMarkdown.length - 1
+            ];
+            let prevChar = this.currentMarkdown[
+              this.currentMarkdown.length - 2
+            ];
+            if (prevChar === "\n" && this.$refs.resumeEditor) {
+              this.$nextTick(() => this.$refs.resumeEditor.goBottom());
+            }
+            setTimeout(showResume, interval);
+          } else {
+            resolve();
+          }
+        };
+        showResume();
+      });
+    }
+  }
+};
+
+let fullStyle_0 = `
+/* 代码高亮 */
+.token.selector{ color: rgb(133,153,0); }
+.token.property{ color: rgb(187,137,0); }
+.token.punctuation{ color: yellow; }
+.token.function{ color: rgb(42,161,152); }
+
+/*
 * 
 * 你好，我是张思傲
 * 下面开始演示我的简历！
@@ -32,10 +121,7 @@
 * {
   transition: all .3s;
 }
-/* 白色背景太单调了，我们来点背景 */
-html {
-  color: rgb(222,222,222); background: rgb(0,43,54);
-}
+
 /* 文字离边框太近了 */
 .styleEditor {
   padding: .5em;
@@ -44,11 +130,6 @@ html {
   overflow: auto;
   width: 45vw; height: 90vh;
 }
-/* 代码高亮 */
-.token.selector{ color: rgb(133,153,0); }
-.token.property{ color: rgb(187,137,0); }
-.token.punctuation{ color: yellow; }
-.token.function{ color: rgb(42,161,152); }
 
 /* 加点 3D 效果呗 */
 html{
@@ -73,16 +154,15 @@ html{
 }
 /* 好了，我开始写简历了 */
 
+`;
 
-`,
-          `
+let fullStyle_1 = `
 /* 这个简历好像差点什么
  * 对了，这是 Markdown 格式的，我需要变成对 HR 更友好的格式
  * 简单，用开源工具翻译成 HTML 就行了
  */
-`
-          ,
-          `
+`;
+let fullStyle_2 = `
 /* 再对 HTML 加点样式 */
 .resumeEditor{
   padding: 2em;
@@ -112,23 +192,22 @@ html{
   padding: .5em;
   background: #ddd;
 }
-`],
-        currentMarkdown: '',
-        fullMarkdown: `张思傲
+`;
+let resume = `张思傲
 ----
 
 java后台研发工程师。
 
-*联系方式
-*手机：18092371340
-*Email：zhangsaio1314@126.com
-*QQ/微信号：229289020
+* 联系方式
+* 手机：18092371340
+* Email：zhangsaio1314@126.com
+* QQ/微信号：229289020
 
 技能
 ----
-*后端：spring springBoot springCloud mybatis hibernate 
-*前端：vue angular
-*其他：
+* 后端：spring springBoot springCloud mybatis hibernate 
+* 前端：vue angular
+* 其他：
 
 工作经历
 ----
@@ -140,89 +219,20 @@ java后台研发工程师。
 * [GitHub](https://github.com/RefinedAll)
 * [码云](https://gitee.com/aflsz)
 
-`
-      }
-    },
-    created() {
-      this.makeResume()
-    },
-
-    methods: {
-      makeResume: async function () {
-        await this.progressivelyShowStyle(0)
-        await this.progressivelyShowResume()
-        await this.progressivelyShowStyle(1)
-        await this.showHtml()
-        await this.progressivelyShowStyle(2)
-      },
-      showHtml: function () {
-        return new Promise((resolve, reject) => {
-          this.enableHtml = true
-          resolve()
-        })
-      },
-      progressivelyShowStyle(n) {
-        return new Promise((resolve, reject) => { 
-          let interval = this.interval
-          let showStyle = (async function () {
-            let style = this.fullStyle[n]
-            if (!style) { return }
-            // 计算前 n 个 style 的字符总数
-            let length = this.fullStyle.filter((_, index) => index <= n).map((item) => item.length).reduce((p, c) => p + c, 0)
-            let prefixLength = length - style.length
-            if (this.currentStyle.length < length) {
-              let l = this.currentStyle.length - prefixLength
-              let char = style.substring(l, l + 1) || ' '
-              this.currentStyle += char
-              if (style.substring(l - 1, l) === '\n' && this.$refs.styleEditor) {
-                this.$nextTick(() => {
-                  this.$refs.styleEditor.goBottom()
-                })
-              }
-              setTimeout(showStyle, interval)
-            } else {
-              resolve()
-            }
-          }).bind(this)
-          showStyle()
-        })
-      },
-      progressivelyShowResume() {
-        return new Promise((resolve, reject) => {
-          let length = this.fullMarkdown.length
-          let interval = this.interval
-          let showResume = () => {
-            if (this.currentMarkdown.length < length) {
-              this.currentMarkdown = this.fullMarkdown.substring(0, this.currentMarkdown.length + 1)
-              let lastChar = this.currentMarkdown[this.currentMarkdown.length - 1]
-              let prevChar = this.currentMarkdown[this.currentMarkdown.length - 2]
-              if (prevChar === '\n' && this.$refs.resumeEditor) {
-                this.$nextTick(() => this.$refs.resumeEditor.goBottom())
-              }
-              setTimeout(showResume, interval)
-            } else {
-              resolve()
-            }
-          }
-          showResume()
-        })
-      }
-    }
-  }
-
+`;
 </script>
 
 <style scoped>
-  #app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
+#app {
+  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-  html {
-    min-height: 100vh;
-  }
-  *{
-    box-sizing: border-box;
-  }
+html {
+  min-height: 100vh;
+}
+* {
+  box-sizing: border-box;
+}
 </style>
