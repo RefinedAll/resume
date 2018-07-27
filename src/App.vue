@@ -18,7 +18,7 @@ export default {
   },
   data() {
     return {
-      interval: 0,
+      interval: 20,
       currentStyle: "",
       enableHtml: false,
       fullStyle: [fullStyle_0, fullStyle_1, fullStyle_2],
@@ -105,11 +105,6 @@ export default {
 };
 
 let fullStyle_0 = `
-/* 代码高亮 */
-.token.selector{ color: rgb(133,153,0); }
-.token.property{ color: rgb(187,137,0); }
-.token.punctuation{ color: yellow; }
-.token.function{ color: rgb(42,161,152); }
 
 /*
 * 
@@ -121,7 +116,10 @@ let fullStyle_0 = `
 * {
   transition: all .3s;
 }
-
+/* 白色背景太单调了，我们来点背景 */
+html {
+  color: rgb(222,222,222); background: rgb(0,43,54);
+}
 /* 文字离边框太近了 */
 .styleEditor {
   padding: .5em;
@@ -130,6 +128,12 @@ let fullStyle_0 = `
   overflow: auto;
   width: 45vw; height: 90vh;
 }
+
+/* 代码高亮 */
+.token.selector{ color: rgb(133,153,0); }
+.token.property{ color: rgb(187,137,0); }
+.token.punctuation{ color: yellow; }
+.token.function{ color: rgb(42,161,152); }
 
 /* 加点 3D 效果呗 */
 html{
