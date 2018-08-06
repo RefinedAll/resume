@@ -21,7 +21,8 @@ export default {
       interval: 20,
       currentStyle: "",
       enableHtml: false,
-      fullStyle: [`
+      fullStyle: [
+        `
 /*
 * 你好，我是张思傲
 * 下面开始演示我的简历！
