@@ -10,6 +10,10 @@ html[data-v-3b8ea682] {
 *[data-v-3b8ea682] {
   box-sizing: border-box;
 }
+.canvas[data-v-3b8ea682] {
+    position: fixed;
+    z-index: -1;
+}
 
 pre[data-v-b4c4f818]{
 }
@@ -54,4 +58,4 @@ html[data-v-0d459f51] {
   box-sizing: border-box;
 }
 
-/*# sourceMappingURL=app.bbf212f9b97d3302bc9bbf24ef9346f7.css.map*/
+/*# sourceMappingURL=app.b1ce2b19d7ed2e080ea6552c843fd16d.css.map*/

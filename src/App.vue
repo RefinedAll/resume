@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <canvas id="canvas" class="canvas"></canvas>
     <StyleEditor ref="styleEditor" :code="currentStyle"></StyleEditor>
     <ResumeEditor ref="resumeEditor" :markdown="currentMarkdown" :enableHtml="enableHtml"></ResumeEditor>
   </div>
@@ -9,6 +10,9 @@
 import StyleEditor from "./components/StyleEditor";
 import ResumeEditor from "./components/ResumeEditor";
 import "./assets/reset.css";
+import Stars from '../static/js/Stars';
+import Moon from '../static/js/Moon';
+import Meteor from '../static/js/Meteor';
 
 export default {
   name: "app",
@@ -101,27 +105,82 @@ export default {
         showResume();
       });
     }
-  }
+  },
+  mounted() {
+		let canvas = document.getElementById('canvas'),
+    ctx = canvas.getContext('2d'),
+    width = window.innerWidth,
+    height = window.innerHeight,
+    //实例化月亮和星星。流星是随机时间生成，所以只初始化数组
+    moon = new Moon(ctx, width, height),
+    stars = new Stars(ctx, width, height, 200),
+    meteors = [],
+    count = 0
+
+canvas.width = width
+canvas.height = height
+
+//流星生成函数
+const meteorGenerator = ()=> {
+    //x位置偏移，以免经过月亮
+    let x = Math.random() * width + 800
+    meteors.push(new Meteor(ctx, x, height))
+
+    //每隔随机时间，生成新流星
+    setTimeout(()=> {
+        meteorGenerator()
+    }, Math.random() * 2000)
+}
+
+//每一帧动画生成函数
+const frame = ()=> {
+    //每隔10帧星星闪烁一次，节省计算资源
+    count++
+    count % 10 == 0 && stars.blink()
+
+    moon.draw()
+    stars.draw()
+
+    meteors.forEach((meteor, index, arr)=> {
+        //如果流星离开视野之内，销毁流星实例，回收内存
+        if (meteor.flow()) {
+            meteor.draw()
+        } else {
+            arr.splice(index, 1)
+        }
+    })
+    requestAnimationFrame(frame)
+}
+
+meteorGenerator()
+frame()
+	},
+
+
+
 };
 
 let fullStyle_0 = `
 
+
+/* 先设置下字体 */
+.styleEditor {
+  color: white;
+}
 /*
 * 
 * 你好，我是张思傲
 * 下面开始演示我的简历！
 */
 
-/* 首先给所有元素加上过渡效果 */
+/* 首先给所有元素加上过渡效果*/
 * {
   transition: all .3s;
 }
-/* 白色背景太单调了，我们来点背景 */
-html {
-  color: rgb(222,222,222); background: rgb(0,43,54);
-}
+
 /* 文字离边框太近了 */
 .styleEditor {
+   color: white;
   padding: .5em;
   border: 1px solid;
   margin: .5em;
@@ -153,7 +212,7 @@ html{
   padding: .5em;  margin: .5em;
   width: 48vw; height: 90vh;
   border: 1px solid;
-  background: white; color: #222;
+  background: white; color: black;
   overflow: auto;
 }
 /* 好了，我开始写简历了 */
@@ -238,5 +297,9 @@ html {
 }
 * {
   box-sizing: border-box;
+}
+.canvas {
+    position: fixed;
+    z-index: -1;
 }
 </style>
