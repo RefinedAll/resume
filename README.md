@@ -1,4 +1,4 @@
 
 > This is my resume
 
-[预览](https://refinedall.github.io/resume/public/)
+[预览](https://refinedme.github.io/resume/public/)
