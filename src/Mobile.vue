@@ -131,24 +131,59 @@ html{
 
 java后台研发工程师。
 
-* 联系方式
-* 手机：18092371340
-* Email：zhangsaio1314@126.com
+* 手机：18911431020
+* Email：zhangsiao1314@126.com
 * QQ/微信号：229289020
 
 技能
 ----
-* 后端：spring springBoot springCloud mybatis hibernate 
-* 前端：vue angular
-* 其他：
+* spring springBoot springCloud mybatis/mybatisPlus hibernate jhipster maven git 
+* vue angular jsp node npm 
+* linux基础命令 Docker 
 
 工作经历
 ----
 1.北京安宏睿业科技有限公司
 
+2.北京中软国际
+
 自我评价
 ----
-本人静若处子动如脱兔，责任心强从不中途跑路
+本人静若处子动如脱兔，责任心强从不中途跑路;
+
+代码洁癖,热爱互联网和新技术，具有极强的快速学习能力。有较强的责任心和较好的抗压能力;
+年轻，不将就，做更好的自己！
+
+项目经验 
+----
+* [企业安全生产服务云平台](http://aqpt.cn)
+  
+**责任描述**：负责项目框架的选型与搭建，部分数据库设计，原型设计，部分业务代码的编写。
+
+**项目简介**：该项目面向企业，服务于企业安全生产规范化建设。项目后端采用springCloud微服务架构，前端采用Angular2框架。
+
+项目分为四大模块:企业平台，政府平台，中介机构平台，运营平台，建立四个平台之间的联系。数据之间交互，统计，大数据可视化等功能。
+
+项目中所用到的技术和框架以及工具：SpringCloud SpringSession SpringBoot SpringBootAdmin Shiro mybatis maven Lombok git swagger2 Druid... 
+
+**数据库**：mysql redis 
+
+**前端框架**:搭建时Angular2 目前升级到5
+
+**开发工具**:IDEA
+
+
+* [嘉晨车队管理系统](http://106.14.119.96:8084)
+
+**责任描述**：BUG修复，代码整理重构，新功能代码编写。项目打包部署到服务器
+
+**项目简介**：该项目是一个车联网项目。一款用于车辆数据呈现的 web 页面，主要包含前端界面与后端服务器，车辆数据包括车辆的基本 信息数据，运行数据，参数数据，统计数据和其他数据等。
+
+数据呈现所需要数据来源为作为 client 通过webSocket 连接到后端服务器的车辆，车辆每间隔 15s(默认)向服务器发送一帧固定格式的数据，
+
+后台通过协议帧解析数据，分类数据分别固化到数据库，存储在redis，缓存中。项目支持最大 10 万台车辆的同时在线，支持最大 5000 用户数的同时在线。
+
+**项目所用到的技术，框架**：springBoot ,mybatis,webSocket,docker,通用mapper，PageHalper,druid,
 
 友情链接
 ----
